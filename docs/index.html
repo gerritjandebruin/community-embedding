@@ -14973,14 +14973,14 @@ dtype: float64</pre>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="With-ordering-each-vector">With ordering each vector<a class="anchor-link" href="#With-ordering-each-vector">&#182;</a></h3>
+<h3 id="With-sorting-each-vector">With sorting each vector<a class="anchor-link" href="#With-sorting-each-vector">&#182;</a></h3>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In this run, we will order each vector in the embedding. Unfortunately, it does not show any gain in performance either.</p>
+<p>In this run, we will sort each individual vector in the embedding. Unfortunately, it does not show any gain in performance either.</p>
 
 </div>
 </div>
@@ -16298,7 +16298,7 @@ dtype: float64</pre>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="With-ordering-each-embedding">With ordering each embedding<a class="anchor-link" href="#With-ordering-each-embedding">&#182;</a></h3>
+<h3 id="Trying-all-orderings">Trying all orderings<a class="anchor-link" href="#Trying-all-orderings">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -16312,7 +16312,7 @@ dtype: float64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">do_experiment</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">ordering</span><span class="p">):</span>
@@ -16340,7 +16340,7 @@ dtype: float64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">it</span> <span class="o">=</span> <span class="p">[</span>
@@ -16358,7 +16358,7 @@ dtype: float64</pre>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="mi">96</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
@@ -16579,12 +16579,33 @@ dtype: float64</pre>
 </div>
 
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is for each $p$, $q$ combination the ordering of rows that yields the best performance on the test set of that $diff$ embedding. Note that we are both optimizing this test set and reporting the performance on the same set.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[73]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result_max</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;diff&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;std&#39;</span><span class="p">]})</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result_max</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;diff&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">([</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result_max</span>
 </pre></div>
 
     </div>
@@ -16597,7 +16618,7 @@ dtype: float64</pre>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[73]:</div>
+    <div class="prompt output_prompt">Out[9]:</div>
 
 
 
@@ -16620,17 +16641,3282 @@ dtype: float64</pre>
   <thead>
     <tr style="text-align: right;">
       <th></th>
+      <th>same</th>
       <th>diff</th>
+      <th>p</th>
+      <th>q</th>
+      <th>ordering</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>mean</th>
-      <td>0.503533</td>
+      <th>106</th>
+      <td>0.818476</td>
+      <td>0.661331</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[1, 3, 0, 2]</td>
     </tr>
     <tr>
-      <th>std</th>
-      <td>0.065208</td>
+      <th>177</th>
+      <td>0.773401</td>
+      <td>0.621973</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>164</th>
+      <td>0.791766</td>
+      <td>0.620355</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>192</th>
+      <td>0.818147</td>
+      <td>0.618741</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>246</th>
+      <td>0.841131</td>
+      <td>0.613985</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>346</th>
+      <td>0.805866</td>
+      <td>0.600707</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>0.822796</td>
+      <td>0.600293</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>264</th>
+      <td>0.791965</td>
+      <td>0.577321</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>94</th>
+      <td>0.795456</td>
+      <td>0.573833</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>322</th>
+      <td>0.847724</td>
+      <td>0.570908</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>0.833344</td>
+      <td>0.566510</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>368</th>
+      <td>0.799510</td>
+      <td>0.561279</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>134</th>
+      <td>0.824373</td>
+      <td>0.547664</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>305</th>
+      <td>0.831095</td>
+      <td>0.543622</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>230</th>
+      <td>0.820173</td>
+      <td>0.537157</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>0.776362</td>
+      <td>0.501096</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And for completeness, here the entire list:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">option_context</span><span class="p">(</span><span class="s2">&quot;display.max_rows&quot;</span><span class="p">,</span> <span class="mi">999</span><span class="p">):</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;diff&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>same</th>
+      <th>diff</th>
+      <th>p</th>
+      <th>q</th>
+      <th>ordering</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>106</th>
+      <td>0.818476</td>
+      <td>0.661331</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>177</th>
+      <td>0.773401</td>
+      <td>0.621973</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>164</th>
+      <td>0.791766</td>
+      <td>0.620355</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>192</th>
+      <td>0.818147</td>
+      <td>0.618741</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>246</th>
+      <td>0.841131</td>
+      <td>0.613985</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>346</th>
+      <td>0.805866</td>
+      <td>0.600707</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>0.822796</td>
+      <td>0.600293</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>0.834835</td>
+      <td>0.595497</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>144</th>
+      <td>0.822048</td>
+      <td>0.592352</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>241</th>
+      <td>0.824574</td>
+      <td>0.583949</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>264</th>
+      <td>0.791965</td>
+      <td>0.577321</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>166</th>
+      <td>0.817958</td>
+      <td>0.576266</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>94</th>
+      <td>0.795456</td>
+      <td>0.573833</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>322</th>
+      <td>0.847724</td>
+      <td>0.570908</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>272</th>
+      <td>0.795175</td>
+      <td>0.570024</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>0.803665</td>
+      <td>0.567005</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>0.833344</td>
+      <td>0.566510</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>330</th>
+      <td>0.828898</td>
+      <td>0.561384</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>368</th>
+      <td>0.799510</td>
+      <td>0.561279</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>83</th>
+      <td>0.808054</td>
+      <td>0.557724</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>90</th>
+      <td>0.774047</td>
+      <td>0.554601</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>320</th>
+      <td>0.837808</td>
+      <td>0.552287</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.828967</td>
+      <td>0.551363</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>150</th>
+      <td>0.830310</td>
+      <td>0.550488</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>85</th>
+      <td>0.779237</td>
+      <td>0.550374</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>0.803067</td>
+      <td>0.547673</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>134</th>
+      <td>0.824373</td>
+      <td>0.547664</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>0.804400</td>
+      <td>0.544661</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>148</th>
+      <td>0.818128</td>
+      <td>0.544213</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>305</th>
+      <td>0.831095</td>
+      <td>0.543622</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>146</th>
+      <td>0.815822</td>
+      <td>0.540587</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>0.792878</td>
+      <td>0.540150</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>0.834979</td>
+      <td>0.539824</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>351</th>
+      <td>0.820646</td>
+      <td>0.539710</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>80</th>
+      <td>0.812453</td>
+      <td>0.539223</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>183</th>
+      <td>0.812499</td>
+      <td>0.538283</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>0.826092</td>
+      <td>0.537811</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>230</th>
+      <td>0.820173</td>
+      <td>0.537157</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>0.824483</td>
+      <td>0.536895</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>239</th>
+      <td>0.829099</td>
+      <td>0.535872</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>74</th>
+      <td>0.782408</td>
+      <td>0.535811</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>76</th>
+      <td>0.789853</td>
+      <td>0.535810</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>226</th>
+      <td>0.830188</td>
+      <td>0.531536</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>273</th>
+      <td>0.795431</td>
+      <td>0.531532</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>135</th>
+      <td>0.821644</td>
+      <td>0.531458</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>353</th>
+      <td>0.803953</td>
+      <td>0.531096</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>121</th>
+      <td>0.802825</td>
+      <td>0.529668</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.805026</td>
+      <td>0.529196</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>97</th>
+      <td>0.814889</td>
+      <td>0.528802</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>0.802185</td>
+      <td>0.528370</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.850745</td>
+      <td>0.528339</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>0.817663</td>
+      <td>0.527271</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>77</th>
+      <td>0.789776</td>
+      <td>0.523349</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>363</th>
+      <td>0.823664</td>
+      <td>0.523048</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>342</th>
+      <td>0.826995</td>
+      <td>0.522560</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>288</th>
+      <td>0.826048</td>
+      <td>0.521809</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>355</th>
+      <td>0.815628</td>
+      <td>0.519838</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>170</th>
+      <td>0.785312</td>
+      <td>0.519030</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>315</th>
+      <td>0.841986</td>
+      <td>0.518374</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>378</th>
+      <td>0.820099</td>
+      <td>0.517821</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>265</th>
+      <td>0.815323</td>
+      <td>0.517543</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>175</th>
+      <td>0.821499</td>
+      <td>0.515048</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>244</th>
+      <td>0.803652</td>
+      <td>0.512511</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>357</th>
+      <td>0.826357</td>
+      <td>0.512270</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>307</th>
+      <td>0.810012</td>
+      <td>0.509698</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>338</th>
+      <td>0.838868</td>
+      <td>0.508563</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>371</th>
+      <td>0.810865</td>
+      <td>0.508057</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>84</th>
+      <td>0.763842</td>
+      <td>0.508006</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>122</th>
+      <td>0.807744</td>
+      <td>0.507954</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>227</th>
+      <td>0.837889</td>
+      <td>0.507396</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>184</th>
+      <td>0.800036</td>
+      <td>0.506059</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>0.798879</td>
+      <td>0.505601</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>282</th>
+      <td>0.819550</td>
+      <td>0.504526</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>279</th>
+      <td>0.837867</td>
+      <td>0.504420</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>269</th>
+      <td>0.793058</td>
+      <td>0.504305</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>374</th>
+      <td>0.803059</td>
+      <td>0.504275</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>367</th>
+      <td>0.816689</td>
+      <td>0.501264</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>0.776362</td>
+      <td>0.501096</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>220</th>
+      <td>0.823227</td>
+      <td>0.500597</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>208</th>
+      <td>0.830623</td>
+      <td>0.500363</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>173</th>
+      <td>0.777014</td>
+      <td>0.500238</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>251</th>
+      <td>0.829089</td>
+      <td>0.499248</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>160</th>
+      <td>0.818209</td>
+      <td>0.497826</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>0.818883</td>
+      <td>0.497772</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>197</th>
+      <td>0.833925</td>
+      <td>0.497754</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>152</th>
+      <td>0.813063</td>
+      <td>0.497626</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>301</th>
+      <td>0.809158</td>
+      <td>0.497254</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>316</th>
+      <td>0.843209</td>
+      <td>0.496987</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>263</th>
+      <td>0.822450</td>
+      <td>0.496385</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>93</th>
+      <td>0.782273</td>
+      <td>0.496055</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>344</th>
+      <td>0.824172</td>
+      <td>0.495998</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>255</th>
+      <td>0.812829</td>
+      <td>0.495929</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>319</th>
+      <td>0.831038</td>
+      <td>0.495128</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>276</th>
+      <td>0.818494</td>
+      <td>0.494790</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>69</th>
+      <td>0.800016</td>
+      <td>0.492421</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>169</th>
+      <td>0.804325</td>
+      <td>0.491588</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>168</th>
+      <td>0.802394</td>
+      <td>0.491210</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>54</th>
+      <td>0.760379</td>
+      <td>0.491149</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>0.811066</td>
+      <td>0.491063</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>158</th>
+      <td>0.814302</td>
+      <td>0.490436</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>66</th>
+      <td>0.771594</td>
+      <td>0.490285</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>369</th>
+      <td>0.843990</td>
+      <td>0.488311</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>0.797753</td>
+      <td>0.488088</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>0.814496</td>
+      <td>0.488062</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>296</th>
+      <td>0.828336</td>
+      <td>0.487675</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>186</th>
+      <td>0.781203</td>
+      <td>0.487091</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>284</th>
+      <td>0.794544</td>
+      <td>0.486292</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>79</th>
+      <td>0.793189</td>
+      <td>0.485901</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>102</th>
+      <td>0.818005</td>
+      <td>0.485358</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>0.802803</td>
+      <td>0.485183</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>101</th>
+      <td>0.812664</td>
+      <td>0.484141</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>138</th>
+      <td>0.836617</td>
+      <td>0.483614</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>149</th>
+      <td>0.812097</td>
+      <td>0.483225</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>172</th>
+      <td>0.816215</td>
+      <td>0.482990</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>361</th>
+      <td>0.815076</td>
+      <td>0.482563</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>193</th>
+      <td>0.818810</td>
+      <td>0.481614</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>128</th>
+      <td>0.825392</td>
+      <td>0.480778</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>365</th>
+      <td>0.821439</td>
+      <td>0.480331</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>285</th>
+      <td>0.814354</td>
+      <td>0.480092</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>140</th>
+      <td>0.823217</td>
+      <td>0.479699</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>103</th>
+      <td>0.799762</td>
+      <td>0.479279</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>333</th>
+      <td>0.826834</td>
+      <td>0.478828</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>221</th>
+      <td>0.825148</td>
+      <td>0.478663</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>262</th>
+      <td>0.845592</td>
+      <td>0.478508</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>379</th>
+      <td>0.804648</td>
+      <td>0.477563</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>362</th>
+      <td>0.837311</td>
+      <td>0.477275</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>380</th>
+      <td>0.820576</td>
+      <td>0.476957</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>0.807537</td>
+      <td>0.476523</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>359</th>
+      <td>0.816116</td>
+      <td>0.475999</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>223</th>
+      <td>0.827367</td>
+      <td>0.474888</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>110</th>
+      <td>0.830022</td>
+      <td>0.474524</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>137</th>
+      <td>0.822410</td>
+      <td>0.474134</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>366</th>
+      <td>0.837220</td>
+      <td>0.474005</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>343</th>
+      <td>0.818399</td>
+      <td>0.473294</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>236</th>
+      <td>0.795180</td>
+      <td>0.472552</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>252</th>
+      <td>0.826718</td>
+      <td>0.472062</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>383</th>
+      <td>0.812130</td>
+      <td>0.471480</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>60</th>
+      <td>0.806375</td>
+      <td>0.471448</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>180</th>
+      <td>0.814001</td>
+      <td>0.471299</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>360</th>
+      <td>0.817494</td>
+      <td>0.471048</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>139</th>
+      <td>0.833290</td>
+      <td>0.470840</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>87</th>
+      <td>0.778922</td>
+      <td>0.470836</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>61</th>
+      <td>0.816440</td>
+      <td>0.470481</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>82</th>
+      <td>0.780616</td>
+      <td>0.470366</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>0.812128</td>
+      <td>0.470111</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>321</th>
+      <td>0.804851</td>
+      <td>0.470020</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>325</th>
+      <td>0.802329</td>
+      <td>0.469984</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>329</th>
+      <td>0.839323</td>
+      <td>0.469756</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>155</th>
+      <td>0.812282</td>
+      <td>0.469500</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>352</th>
+      <td>0.837973</td>
+      <td>0.468621</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>275</th>
+      <td>0.802396</td>
+      <td>0.468287</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>286</th>
+      <td>0.811826</td>
+      <td>0.467987</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>178</th>
+      <td>0.775542</td>
+      <td>0.467855</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>194</th>
+      <td>0.811267</td>
+      <td>0.467517</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>162</th>
+      <td>0.810482</td>
+      <td>0.467110</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.821550</td>
+      <td>0.466089</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>334</th>
+      <td>0.811415</td>
+      <td>0.465587</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>53</th>
+      <td>0.835613</td>
+      <td>0.465431</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>205</th>
+      <td>0.801698</td>
+      <td>0.464378</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>271</th>
+      <td>0.814826</td>
+      <td>0.463988</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>266</th>
+      <td>0.822559</td>
+      <td>0.463523</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>237</th>
+      <td>0.817958</td>
+      <td>0.462478</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>222</th>
+      <td>0.810991</td>
+      <td>0.462446</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>156</th>
+      <td>0.784676</td>
+      <td>0.462351</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>132</th>
+      <td>0.814055</td>
+      <td>0.462104</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>337</th>
+      <td>0.823838</td>
+      <td>0.461606</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>377</th>
+      <td>0.815317</td>
+      <td>0.461465</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>190</th>
+      <td>0.780042</td>
+      <td>0.461316</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>176</th>
+      <td>0.783707</td>
+      <td>0.460935</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>73</th>
+      <td>0.775374</td>
+      <td>0.459149</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>235</th>
+      <td>0.833824</td>
+      <td>0.458856</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>0.792734</td>
+      <td>0.458644</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>181</th>
+      <td>0.809915</td>
+      <td>0.458628</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>65</th>
+      <td>0.802258</td>
+      <td>0.458426</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>59</th>
+      <td>0.821860</td>
+      <td>0.458354</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>309</th>
+      <td>0.823501</td>
+      <td>0.457649</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.797487</td>
+      <td>0.457389</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>370</th>
+      <td>0.844271</td>
+      <td>0.457022</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>216</th>
+      <td>0.818616</td>
+      <td>0.456420</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>62</th>
+      <td>0.836400</td>
+      <td>0.455847</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>51</th>
+      <td>0.830996</td>
+      <td>0.455818</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>109</th>
+      <td>0.826018</td>
+      <td>0.455688</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>234</th>
+      <td>0.831663</td>
+      <td>0.455039</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>0.826992</td>
+      <td>0.455013</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>229</th>
+      <td>0.844566</td>
+      <td>0.454585</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>382</th>
+      <td>0.811102</td>
+      <td>0.454272</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>0.807359</td>
+      <td>0.453929</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>349</th>
+      <td>0.821374</td>
+      <td>0.453536</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>185</th>
+      <td>0.815022</td>
+      <td>0.453468</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>341</th>
+      <td>0.824232</td>
+      <td>0.452906</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>327</th>
+      <td>0.829253</td>
+      <td>0.452250</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>348</th>
+      <td>0.823807</td>
+      <td>0.452217</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>81</th>
+      <td>0.749602</td>
+      <td>0.452180</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>75</th>
+      <td>0.795356</td>
+      <td>0.451603</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>347</th>
+      <td>0.827525</td>
+      <td>0.451257</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>243</th>
+      <td>0.804484</td>
+      <td>0.450223</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>0.835639</td>
+      <td>0.450085</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>248</th>
+      <td>0.825513</td>
+      <td>0.449860</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>98</th>
+      <td>0.803042</td>
+      <td>0.449759</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>125</th>
+      <td>0.829121</td>
+      <td>0.449190</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>245</th>
+      <td>0.823738</td>
+      <td>0.448092</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>267</th>
+      <td>0.809224</td>
+      <td>0.447983</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>0.798403</td>
+      <td>0.447803</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>71</th>
+      <td>0.788935</td>
+      <td>0.447615</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>133</th>
+      <td>0.828544</td>
+      <td>0.447594</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>127</th>
+      <td>0.847694</td>
+      <td>0.447439</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>291</th>
+      <td>0.810999</td>
+      <td>0.447423</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>258</th>
+      <td>0.786372</td>
+      <td>0.447377</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>0.811380</td>
+      <td>0.447107</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>326</th>
+      <td>0.817767</td>
+      <td>0.446747</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>111</th>
+      <td>0.805683</td>
+      <td>0.446635</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>174</th>
+      <td>0.784353</td>
+      <td>0.446542</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>89</th>
+      <td>0.786502</td>
+      <td>0.446431</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>67</th>
+      <td>0.794491</td>
+      <td>0.446261</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>354</th>
+      <td>0.790272</td>
+      <td>0.445417</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>304</th>
+      <td>0.835616</td>
+      <td>0.445131</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>0.826625</td>
+      <td>0.444867</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>88</th>
+      <td>0.785726</td>
+      <td>0.444847</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>142</th>
+      <td>0.806753</td>
+      <td>0.444793</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>209</th>
+      <td>0.830827</td>
+      <td>0.444746</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>157</th>
+      <td>0.819941</td>
+      <td>0.444656</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>281</th>
+      <td>0.811527</td>
+      <td>0.444626</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>358</th>
+      <td>0.827177</td>
+      <td>0.444344</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>179</th>
+      <td>0.799730</td>
+      <td>0.443760</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>219</th>
+      <td>0.843512</td>
+      <td>0.443026</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>306</th>
+      <td>0.839217</td>
+      <td>0.442247</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>163</th>
+      <td>0.811104</td>
+      <td>0.442074</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>159</th>
+      <td>0.822215</td>
+      <td>0.441480</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>373</th>
+      <td>0.818869</td>
+      <td>0.441179</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>240</th>
+      <td>0.812558</td>
+      <td>0.441088</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>335</th>
+      <td>0.832414</td>
+      <td>0.440837</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>123</th>
+      <td>0.824998</td>
+      <td>0.440451</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>196</th>
+      <td>0.833561</td>
+      <td>0.439741</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>124</th>
+      <td>0.815961</td>
+      <td>0.439729</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>340</th>
+      <td>0.833712</td>
+      <td>0.439363</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>129</th>
+      <td>0.822232</td>
+      <td>0.438994</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>70</th>
+      <td>0.820722</td>
+      <td>0.438870</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>86</th>
+      <td>0.786892</td>
+      <td>0.438644</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>302</th>
+      <td>0.839618</td>
+      <td>0.438497</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>143</th>
+      <td>0.809448</td>
+      <td>0.437894</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>120</th>
+      <td>0.820612</td>
+      <td>0.437736</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>259</th>
+      <td>0.812658</td>
+      <td>0.437683</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>268</th>
+      <td>0.818234</td>
+      <td>0.437361</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>256</th>
+      <td>0.803240</td>
+      <td>0.437085</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>207</th>
+      <td>0.806304</td>
+      <td>0.437056</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>260</th>
+      <td>0.801033</td>
+      <td>0.436192</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>376</th>
+      <td>0.789942</td>
+      <td>0.436032</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>283</th>
+      <td>0.813516</td>
+      <td>0.435686</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>72</th>
+      <td>0.796175</td>
+      <td>0.435615</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>0.810518</td>
+      <td>0.435513</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>331</th>
+      <td>0.819639</td>
+      <td>0.435318</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>55</th>
+      <td>0.776225</td>
+      <td>0.434987</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>136</th>
+      <td>0.822877</td>
+      <td>0.434498</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>95</th>
+      <td>0.764860</td>
+      <td>0.434403</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>270</th>
+      <td>0.827019</td>
+      <td>0.434325</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>0.819901</td>
+      <td>0.434070</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>63</th>
+      <td>0.811320</td>
+      <td>0.434024</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.816204</td>
+      <td>0.433818</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>290</th>
+      <td>0.853705</td>
+      <td>0.433608</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>202</th>
+      <td>0.813854</td>
+      <td>0.433369</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>232</th>
+      <td>0.822220</td>
+      <td>0.433175</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>381</th>
+      <td>0.799201</td>
+      <td>0.432540</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>293</th>
+      <td>0.805888</td>
+      <td>0.432193</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>0.818093</td>
+      <td>0.432052</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>336</th>
+      <td>0.809948</td>
+      <td>0.431957</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>311</th>
+      <td>0.839108</td>
+      <td>0.431950</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>189</th>
+      <td>0.812377</td>
+      <td>0.431765</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>165</th>
+      <td>0.803171</td>
+      <td>0.431464</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>154</th>
+      <td>0.798942</td>
+      <td>0.431385</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.817751</td>
+      <td>0.431344</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>0.817259</td>
+      <td>0.431187</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>0.839120</td>
+      <td>0.430716</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>153</th>
+      <td>0.834209</td>
+      <td>0.430503</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>68</th>
+      <td>0.821096</td>
+      <td>0.429796</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>171</th>
+      <td>0.806940</td>
+      <td>0.429571</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>99</th>
+      <td>0.830459</td>
+      <td>0.429548</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>298</th>
+      <td>0.829000</td>
+      <td>0.428867</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>0.772169</td>
+      <td>0.428855</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>310</th>
+      <td>0.807547</td>
+      <td>0.428217</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>58</th>
+      <td>0.800282</td>
+      <td>0.427623</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>0.823999</td>
+      <td>0.426817</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>0.805877</td>
+      <td>0.425887</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>231</th>
+      <td>0.848141</td>
+      <td>0.425696</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>92</th>
+      <td>0.762084</td>
+      <td>0.425676</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>64</th>
+      <td>0.784788</td>
+      <td>0.425553</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>104</th>
+      <td>0.824666</td>
+      <td>0.425460</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>242</th>
+      <td>0.817711</td>
+      <td>0.425433</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>187</th>
+      <td>0.785844</td>
+      <td>0.425396</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>0.826427</td>
+      <td>0.425206</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>294</th>
+      <td>0.823805</td>
+      <td>0.423956</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>372</th>
+      <td>0.815502</td>
+      <td>0.423887</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>167</th>
+      <td>0.806490</td>
+      <td>0.423088</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>364</th>
+      <td>0.806655</td>
+      <td>0.422981</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>280</th>
+      <td>0.817267</td>
+      <td>0.422506</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>313</th>
+      <td>0.823422</td>
+      <td>0.422366</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>345</th>
+      <td>0.803015</td>
+      <td>0.422288</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>210</th>
+      <td>0.822772</td>
+      <td>0.421758</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>297</th>
+      <td>0.824760</td>
+      <td>0.421707</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>0.836872</td>
+      <td>0.421533</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>0.826962</td>
+      <td>0.420901</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>300</th>
+      <td>0.816035</td>
+      <td>0.420882</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>356</th>
+      <td>0.830513</td>
+      <td>0.419704</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>218</th>
+      <td>0.817310</td>
+      <td>0.419207</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>96</th>
+      <td>0.820338</td>
+      <td>0.418889</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>375</th>
+      <td>0.805626</td>
+      <td>0.418818</td>
+      <td>8</td>
+      <td>8</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>308</th>
+      <td>0.814005</td>
+      <td>0.418526</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>0.826109</td>
+      <td>0.418249</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>118</th>
+      <td>0.792375</td>
+      <td>0.417788</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>314</th>
+      <td>0.825645</td>
+      <td>0.417562</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[0, 2, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.832372</td>
+      <td>0.417489</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>161</th>
+      <td>0.824667</td>
+      <td>0.417109</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>200</th>
+      <td>0.810702</td>
+      <td>0.417100</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>212</th>
+      <td>0.815849</td>
+      <td>0.416941</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>126</th>
+      <td>0.792064</td>
+      <td>0.416473</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>206</th>
+      <td>0.824484</td>
+      <td>0.415795</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>303</th>
+      <td>0.836884</td>
+      <td>0.415788</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[2, 1, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>182</th>
+      <td>0.760882</td>
+      <td>0.415545</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>217</th>
+      <td>0.816405</td>
+      <td>0.415082</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>131</th>
+      <td>0.841861</td>
+      <td>0.414212</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>317</th>
+      <td>0.817151</td>
+      <td>0.413430</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>0.822109</td>
+      <td>0.412854</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>339</th>
+      <td>0.829704</td>
+      <td>0.412739</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>247</th>
+      <td>0.810699</td>
+      <td>0.411406</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>198</th>
+      <td>0.818652</td>
+      <td>0.411356</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>225</th>
+      <td>0.806293</td>
+      <td>0.410888</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>151</th>
+      <td>0.803357</td>
+      <td>0.410189</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>0.793178</td>
+      <td>0.408341</td>
+      <td>1</td>
+      <td>4</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>257</th>
+      <td>0.787802</td>
+      <td>0.408284</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>203</th>
+      <td>0.818452</td>
+      <td>0.408226</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>199</th>
+      <td>0.842514</td>
+      <td>0.408202</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>188</th>
+      <td>0.789373</td>
+      <td>0.408072</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>114</th>
+      <td>0.788820</td>
+      <td>0.407961</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>274</th>
+      <td>0.825756</td>
+      <td>0.407818</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>191</th>
+      <td>0.780627</td>
+      <td>0.407220</td>
+      <td>2</td>
+      <td>8</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>250</th>
+      <td>0.843283</td>
+      <td>0.407172</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>253</th>
+      <td>0.832754</td>
+      <td>0.406180</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>332</th>
+      <td>0.836080</td>
+      <td>0.405536</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[3, 1, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>233</th>
+      <td>0.806325</td>
+      <td>0.405076</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>228</th>
+      <td>0.803494</td>
+      <td>0.404796</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>249</th>
+      <td>0.789696</td>
+      <td>0.404735</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>0.808962</td>
+      <td>0.404066</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>0.803986</td>
+      <td>0.403953</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>287</th>
+      <td>0.818512</td>
+      <td>0.403952</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>107</th>
+      <td>0.821194</td>
+      <td>0.403555</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>289</th>
+      <td>0.839423</td>
+      <td>0.403463</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>195</th>
+      <td>0.827963</td>
+      <td>0.403090</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>130</th>
+      <td>0.838766</td>
+      <td>0.402951</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[1, 3, 0, 2]</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.850923</td>
+      <td>0.402862</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[0, 3, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>278</th>
+      <td>0.812045</td>
+      <td>0.402404</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>141</th>
+      <td>0.826897</td>
+      <td>0.401955</td>
+      <td>2</td>
+      <td>2</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>214</th>
+      <td>0.830975</td>
+      <td>0.401563</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>105</th>
+      <td>0.829408</td>
+      <td>0.401524</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>350</th>
+      <td>0.805684</td>
+      <td>0.401339</td>
+      <td>8</td>
+      <td>4</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>78</th>
+      <td>0.801879</td>
+      <td>0.401254</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>0.815175</td>
+      <td>0.401231</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>204</th>
+      <td>0.811543</td>
+      <td>0.400957</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>0.811146</td>
+      <td>0.400017</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>215</th>
+      <td>0.838124</td>
+      <td>0.397086</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[3, 2, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>277</th>
+      <td>0.806275</td>
+      <td>0.395265</td>
+      <td>4</td>
+      <td>8</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>108</th>
+      <td>0.830006</td>
+      <td>0.394985</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>295</th>
+      <td>0.826994</td>
+      <td>0.394220</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[1, 0, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>0.812799</td>
+      <td>0.392500</td>
+      <td>1</td>
+      <td>2</td>
+      <td>[2, 0, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>318</th>
+      <td>0.821535</td>
+      <td>0.392344</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[1, 0, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>254</th>
+      <td>0.821245</td>
+      <td>0.392180</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[2, 1, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>145</th>
+      <td>0.818375</td>
+      <td>0.392044</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[0, 1, 3, 2]</td>
+    </tr>
+    <tr>
+      <th>112</th>
+      <td>0.825848</td>
+      <td>0.391751</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>113</th>
+      <td>0.824927</td>
+      <td>0.391747</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[2, 3, 1, 0]</td>
+    </tr>
+    <tr>
+      <th>201</th>
+      <td>0.850752</td>
+      <td>0.391431</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[1, 2, 3, 0]</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>0.834562</td>
+      <td>0.390119</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>0.830006</td>
+      <td>0.388223</td>
+      <td>1</td>
+      <td>1</td>
+      <td>[3, 0, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>91</th>
+      <td>0.792150</td>
+      <td>0.386590</td>
+      <td>1</td>
+      <td>8</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>238</th>
+      <td>0.834210</td>
+      <td>0.386565</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[3, 2, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>261</th>
+      <td>0.844362</td>
+      <td>0.384765</td>
+      <td>4</td>
+      <td>4</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>211</th>
+      <td>0.810028</td>
+      <td>0.384491</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[3, 0, 2, 1]</td>
+    </tr>
+    <tr>
+      <th>324</th>
+      <td>0.835039</td>
+      <td>0.383737</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[2, 0, 1, 3]</td>
+    </tr>
+    <tr>
+      <th>312</th>
+      <td>0.813970</td>
+      <td>0.383591</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[0, 1, 2, 3]</td>
+    </tr>
+    <tr>
+      <th>299</th>
+      <td>0.817738</td>
+      <td>0.379504</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>328</th>
+      <td>0.829151</td>
+      <td>0.378611</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[2, 3, 0, 1]</td>
+    </tr>
+    <tr>
+      <th>292</th>
+      <td>0.829841</td>
+      <td>0.377056</td>
+      <td>8</td>
+      <td>1</td>
+      <td>[0, 3, 1, 2]</td>
+    </tr>
+    <tr>
+      <th>323</th>
+      <td>0.818266</td>
+      <td>0.375599</td>
+      <td>8</td>
+      <td>2</td>
+      <td>[1, 3, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>147</th>
+      <td>0.845289</td>
+      <td>0.364584</td>
+      <td>2</td>
+      <td>4</td>
+      <td>[0, 2, 3, 1]</td>
+    </tr>
+    <tr>
+      <th>224</th>
+      <td>0.825824</td>
+      <td>0.361264</td>
+      <td>4</td>
+      <td>2</td>
+      <td>[1, 2, 0, 3]</td>
+    </tr>
+    <tr>
+      <th>213</th>
+      <td>0.820749</td>
+      <td>0.353655</td>
+      <td>4</td>
+      <td>1</td>
+      <td>[3, 1, 2, 0]</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>0.820670</td>
+      <td>0.353005</td>
+      <td>2</td>
+      <td>1</td>
+      <td>[3, 2, 1, 0]</td>
     </tr>
   </tbody>
 </table>

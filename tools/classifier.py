@@ -8,7 +8,7 @@ import sklearn
 import sklearn.multiclass
 import xgboost as xgb
 
-n_jobs=128
+n_jobs=5
 
 Split = namedtuple('Split', ['X', 'y'])
 
