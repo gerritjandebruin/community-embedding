@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 from sklearn.manifold import TSNE
 
-from .classifier import split
+from ._classifier import split
 
 
 def get_embedding(
@@ -19,9 +19,9 @@ def get_embedding(
     """  
     node2vec = Node2Vec(
         graph, dimensions, walk_length, num_walks, p, q, weight_key, workers, 
-        sampling_strategy, quiet
+        sampling_strategy, quiet, seed=seed
         )
-    model = node2vec.fit(seed=seed)
+    model = node2vec.fit()
     
     embedding = pd.DataFrame(model.wv.vectors, index=model.wv.index2entity)
     for column, value in kwargs.items():

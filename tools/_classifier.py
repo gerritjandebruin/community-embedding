@@ -43,7 +43,7 @@ def plot_roc_curve(classifier):
 
 
 class XGBClassifier:
-	def __init__(self, n_jobs=n_jobs, random_state=0):
+	def __init__(self, n_jobs=n_jobs, random_state=1):
 		self.clf = xgb.XGBClassifier(n_jobs=n_jobs, random_state=random_state)
 		self.label_encoder = sklearn.preprocessing.LabelEncoder()
 

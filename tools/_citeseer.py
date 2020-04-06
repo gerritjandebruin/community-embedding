@@ -3,7 +3,7 @@ import csv
 import networkx as nx
 import pandas as pd
 
-from .network import gc
+from ._network import gc
 
 
 def get_data(giant_component=True) -> (pd.Series, nx.Graph):

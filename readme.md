@@ -3,7 +3,9 @@ This repository contains our current research into obtaining baseline performanc
 # Requirements
 Create a new virtual environment in conda:
 ```
-conda create -n community-embedding node2vec jupyter scikit-learn networkx pandas tqdm seaborn xgboost jupyter_contrib_nbextensions
+conda create -n community-embedding jupyter scikit-learn networkx pandas tqdm seaborn xgboost jupyter_contrib_nbextensions joblib
+conda activate community-embedding
+pip install git+https://github.com/gerritjandebruin/node2vec
 ```
 
 # Generating the Github page
